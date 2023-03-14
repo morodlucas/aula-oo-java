@@ -1,9 +1,17 @@
 package ex2;
+//ex3
 
 public class Funcionario {
 	int id;
-	String name;
+	String nome;
 	double salario;
+	
+	//método construtor
+	public Funcionario(int id, String nome, double salario) {
+		this.id = id;
+		this.nome = nome;
+		this.salario = salario;
+	}
 	
 	//método para retornar o salário líquido	
 	public double salLiquido(double desconto) {
@@ -21,7 +29,7 @@ public class Funcionario {
 	public String getDados() {
 		String aux = "";
 		aux += "ID: " + id + "\n";
-		aux += "Nome: " + name + "\n";
+		aux += "Nome: " + nome + "\n";
 		aux += "Salario: R$" + String.format("%.2f", salario) + "\n";
 		return aux;
 	}	

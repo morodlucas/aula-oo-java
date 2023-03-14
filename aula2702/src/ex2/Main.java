@@ -4,11 +4,7 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		Funcionario f = new Funcionario();
-		
-		f.name = "fdasgf";
-		f.id = 4325;
-		f.salario = 1000.00;
+		Funcionario f = new Funcionario(120, "FDSFfdd", 1000);
 		
 		System.out.println(f.getDados());
 		
@@ -17,5 +13,6 @@ public class Main {
 		System.out.println(f.getDados());
 		
 	}
+	
 
 }

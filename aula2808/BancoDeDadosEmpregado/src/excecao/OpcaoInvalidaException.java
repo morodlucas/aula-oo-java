@@ -1,4 +1,4 @@
-package empregado.excecao;
+package excecao;
 
 public class OpcaoInvalidaException extends Exception {
 	

@@ -1,21 +1,141 @@
-drop table java_departamento; commit;
-drop table java_empregado; commit;
 
-create table java_departamento (
-    id integer,
-    nome varchar2(50),
-    primary key(id)
+DROP TABLE tb_categoria CASCADE CONSTRAINTS;
+
+DROP TABLE tb_cidade CASCADE CONSTRAINTS;
+
+DROP TABLE tb_cliente CASCADE CONSTRAINTS;
+
+DROP TABLE tb_empresa CASCADE CONSTRAINTS;
+
+DROP TABLE tb_estado CASCADE CONSTRAINTS;
+
+DROP TABLE tb_feedback CASCADE CONSTRAINTS;
+
+DROP TABLE tb_produto CASCADE CONSTRAINTS;
+
+DROP TABLE tb_tipo_feed CASCADE CONSTRAINTS;
+
+DROP TABLE tb_tipo_produto CASCADE CONSTRAINTS;
+
+
+CREATE TABLE tb_categoria (
+    id_categoria NUMBER(8) NOT NULL,
+    nm_categoria VARCHAR2(30) NOT NULL
 );
 
-commit;
+ALTER TABLE tb_categoria ADD CONSTRAINT tb_categoria_pk PRIMARY KEY ( id_categoria );
 
-create table java_empregado (
-    id integer,
-    nome varchar2(50),
-    salario number(12, 2),
-    id_departamento integer,
-    primary key(id),
-    foreign key(id_departamento) REFERENCES java_departamento(id)
+CREATE TABLE tb_cidade (
+    id_cidade NUMBER(8) NOT NULL,
+    nm_cidade VARCHAR2(50) NOT NULL,
+    uf        NUMBER(8)
 );
 
-commit;
+ALTER TABLE tb_cidade ADD CONSTRAINT tb_cidade_pk PRIMARY KEY ( id_cidade );
+
+CREATE TABLE tb_cliente (
+    id_cliente    NUMBER(8) NOT NULL,
+    nm_cliente    VARCHAR2(50) NOT NULL,
+    dt_nascimento DATE NOT NULL,
+    sexo          VARCHAR2(9) NOT NULL,
+    cpf           VARCHAR2(13) NOT NULL,
+    "e-mail"      VARCHAR2(30) NOT NULL,
+    telefone      VARCHAR2(15) NOT NULL,
+    id_cidade     NUMBER(8)
+);
+
+ALTER TABLE tb_cliente ADD CONSTRAINT tb_cliente_pk PRIMARY KEY ( id_cliente );
+
+ALTER TABLE tb_cliente ADD CONSTRAINT tb_cliente__un UNIQUE ( cpf );
+
+CREATE TABLE tb_empresa (
+    id_empresa NUMBER(8) NOT NULL,
+    nm_empresa VARCHAR2(50) NOT NULL
+);
+
+ALTER TABLE tb_empresa ADD CONSTRAINT tb_empresa_pk PRIMARY KEY ( id_empresa );
+
+CREATE TABLE tb_estado (
+    uf        NUMBER(8) NOT NULL,
+    nm_estado VARCHAR2(30) NOT NULL
+);
+
+ALTER TABLE tb_estado ADD CONSTRAINT tb_estado_pk PRIMARY KEY ( uf );
+
+CREATE TABLE tb_feedback (
+    id_feedback    NUMBER(10) NOT NULL,
+    nota_avaliacao NUMBER(2) NOT NULL,
+    data_feed      DATE NOT NULL,
+    id_cliente     NUMBER(8) NOT NULL,
+    id_prod        NUMBER(8),
+    id_categoria   NUMBER(8),
+    id_tipo_feed   NUMBER(8) NOT NULL
+);
+
+ALTER TABLE tb_feedback ADD CONSTRAINT tb_feedback_pk PRIMARY KEY ( id_feedback );
+
+ALTER TABLE tb_feedback ADD CONSTRAINT tb_feedback__un UNIQUE ( id_cliente );
+
+CREATE TABLE tb_produto (
+    id_prod         NUMBER(8) NOT NULL,
+    nm_prod         VARCHAR2(50) NOT NULL,
+    vl_unit         NUMBER(12) NOT NULL,
+    qtd_estoque     NUMBER(20) NOT NULL,
+    unid_medida     NUMBER(20) NOT NULL,
+    data_inclusao   DATE NOT NULL,
+    id_empresa      NUMBER(8) NOT NULL,
+    id_tipo_produto NUMBER(8) NOT NULL
+);
+
+ALTER TABLE tb_produto ADD CONSTRAINT tb_produto_pk PRIMARY KEY ( id_prod );
+
+ALTER TABLE tb_produto ADD CONSTRAINT tb_produto__un UNIQUE ( nm_prod );
+
+CREATE TABLE tb_tipo_feed (
+    id_tipo_feed NUMBER(8) NOT NULL,
+    reclamacao   VARCHAR2(100) NOT NULL,
+    sugestao     VARCHAR2(80) NOT NULL,
+    feedback_esg VARCHAR2(100) NOT NULL
+);
+
+ALTER TABLE tb_tipo_feed ADD CONSTRAINT tb_tipo_feedback_pk PRIMARY KEY ( id_tipo_feed );
+
+CREATE TABLE tb_tipo_produto (
+    id_tipo_produto NUMBER(8) NOT NULL,
+    ds_tipo_produto VARCHAR2(50) NOT NULL
+);
+
+ALTER TABLE tb_tipo_produto ADD CONSTRAINT tb_tipo_prod_pk PRIMARY KEY ( id_tipo_produto );
+
+ALTER TABLE tb_cidade
+    ADD CONSTRAINT tb_cidade_tb_estado_fk FOREIGN KEY ( uf )
+        REFERENCES tb_estado ( uf );
+
+ALTER TABLE tb_cliente
+    ADD CONSTRAINT tb_cliente_tb_cidade_fk FOREIGN KEY ( id_cidade )
+        REFERENCES tb_cidade ( id_cidade );
+
+ALTER TABLE tb_feedback
+    ADD CONSTRAINT tb_feedback_tb_categoria_fk FOREIGN KEY ( id_categoria )
+        REFERENCES tb_categoria ( id_categoria );
+
+ALTER TABLE tb_feedback
+    ADD CONSTRAINT tb_feedback_tb_cliente_fk FOREIGN KEY ( id_cliente )
+        REFERENCES tb_cliente ( id_cliente );
+
+ALTER TABLE tb_feedback
+    ADD CONSTRAINT tb_feedback_tb_produto_fk FOREIGN KEY ( id_prod )
+        REFERENCES tb_produto ( id_prod );
+
+ALTER TABLE tb_feedback
+    ADD CONSTRAINT tb_feedback_tb_tipo_feed_fk FOREIGN KEY ( id_tipo_feed )
+        REFERENCES tb_tipo_feed ( id_tipo_feed );
+
+ALTER TABLE tb_produto
+    ADD CONSTRAINT tb_produto_tb_empresa_fk FOREIGN KEY ( id_empresa )
+        REFERENCES tb_empresa ( id_empresa );
+
+ALTER TABLE tb_produto
+    ADD CONSTRAINT tb_produto_tb_tipo_prod_fk FOREIGN KEY ( id_tipo_produto )
+        REFERENCES tb_tipo_produto ( id_tipo_produto );
+        
